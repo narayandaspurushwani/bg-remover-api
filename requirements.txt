@@ -6,4 +6,4 @@ torchvision
 pillow
 numpy
 rembg
-onnxruntime
+onnxruntime==1.15.1
