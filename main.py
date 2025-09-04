@@ -10,7 +10,7 @@ app = FastAPI()
 def home():
     return {"message": "Background Remover API is running!"}
 
-@app.post("/remove-bg")
+@app.post("/remove-bg/")
 async def remove_bg(file: UploadFile = File(...)):
     # File ko read karna
     contents = await file.read()
