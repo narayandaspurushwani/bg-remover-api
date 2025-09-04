@@ -1,23 +1,27 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import FileResponse
-import os
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import StreamingResponse
+from rembg import remove
 from PIL import Image
 import io
 
 app = FastAPI()
-OUTPUT_DIR = "outputs"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
-@app.post("/remove-bg/")
-async def remove_bg(file: UploadFile = File(...)):
-    image_bytes = await file.read()
-    image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-
-    out_path = f"{OUTPUT_DIR}/{file.filename}"
-    image.save(out_path)  # TODO: Yaha background removal model lagana hai
-
-    return FileResponse(out_path, media_type="image/png", filename="result.png")
 
 @app.get("/")
-async def root():
-    return {"msg": "BG Remover API is running 🚀"}
+def home():
+    return {"message": "Background Remover API is running!"}
+
+@app.post("/remove-bg")
+async def remove_bg(file: UploadFile = File(...)):
+    # File ko read karna
+    contents = await file.read()
+
+    # Background remove karna
+    input_image = Image.open(io.BytesIO(contents))
+    output_image = remove(input_image)
+
+    # Convert output into bytes
+    img_byte_arr = io.BytesIO()
+    output_image.save(img_byte_arr, format="PNG")
+    img_byte_arr.seek(0)
+
+    return StreamingResponse(img_byte_arr, media_type="image/png")
