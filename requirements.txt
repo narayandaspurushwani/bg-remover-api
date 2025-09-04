@@ -1,7 +1,8 @@
 fastapi
 uvicorn
 python-multipart
+torch
+torchvision
 pillow
 numpy
 rembg
-onnxruntime-cpu==1.15.1
