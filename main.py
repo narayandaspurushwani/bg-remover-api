@@ -1,5 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi.responses import StreamingResponse
+from fastapi import FastAPI, UploadFile, File
 from rembg import remove
 from PIL import Image
 import io
@@ -7,21 +6,13 @@ import io
 app = FastAPI()
 
 @app.get("/")
-def home():
+async def root():
     return {"message": "Background Remover API is running!"}
 
-@app.post("/remove-bg/")
+@app.post("/remove-bg")
 async def remove_bg(file: UploadFile = File(...)):
-    # File ko read karna
-    contents = await file.read()
-
-    # Background remove karna
-    input_image = Image.open(io.BytesIO(contents))
+    input_image = Image.open(io.BytesIO(await file.read()))
     output_image = remove(input_image)
-
-    # Convert output into bytes
-    img_byte_arr = io.BytesIO()
-    output_image.save(img_byte_arr, format="PNG")
-    img_byte_arr.seek(0)
-
-    return StreamingResponse(img_byte_arr, media_type="image/png")
+    byte_io = io.BytesIO()
+    output_image.save(byte_io, "PNG")
+    return {"status": "success", "msg": "Background removed!"}
