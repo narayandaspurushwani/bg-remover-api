@@ -2,11 +2,10 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from gradio_client import Client
 import nest_asyncio
-import uvicorn
 
 nest_asyncio.apply()
-
 app = FastAPI()
+
 client = Client("NDPDevloper/RMBG")
 
 @app.post("/remove-bg/")
