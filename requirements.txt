@@ -1,4 +1,4 @@
 fastapi
 uvicorn
-rembg
-python-multipart
+gradio-client
+nest_asyncio
