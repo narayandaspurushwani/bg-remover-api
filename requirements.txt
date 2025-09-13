@@ -2,3 +2,4 @@ fastapi
 uvicorn
 gradio-client
 nest_asyncio
+python-multipart
