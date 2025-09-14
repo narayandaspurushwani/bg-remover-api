@@ -2,10 +2,20 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from rembg import remove
 import base64
+# Import the CORS middleware
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# This is the new endpoint for the root URL
+# Add CORS middleware to allow requests from any origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the BG Remover API. Use the /remove-bg/ endpoint to remove backgrounds from images. You can find the documentation at /docs"}
