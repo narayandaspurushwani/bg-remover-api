@@ -2,18 +2,24 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from rembg import remove
 import base64
-# Import the CORS middleware
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Add CORS middleware to allow requests from any origin
+origins = [
+    # Add your local PHP server URL here
+    "http://192.168.31.143:45267",
+    "http://localhost",
+    "http://localhost:8000",
+    "https://your-hopweb-site.hopweb.io",  # If you decide to deploy to Hopweb later
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
