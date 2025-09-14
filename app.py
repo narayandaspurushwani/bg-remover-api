@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import JSONResponse
 from gradio_client import Client
 import nest_asyncio
+import base64
 import uvicorn
 
 nest_asyncio.apply()
@@ -13,7 +14,9 @@ client = Client("NDPDevloper/RMBG")
 async def remove_bg(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
-        result = client.predict([image_bytes], api_name="/predict")
+        # base64 encode karke string me convert karo
+        image_b64 = base64.b64encode(image_bytes).decode('utf-8')
+        result = client.predict([image_b64], api_name="/predict")
         return JSONResponse(content={"processed_image": result[0]})
     except Exception as e:
         return JSONResponse(content={"error": str(e)})
